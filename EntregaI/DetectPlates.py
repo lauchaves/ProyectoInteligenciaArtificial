@@ -109,7 +109,7 @@ def detectPlatesInScene(imgOriginalScene):
             cv2.waitKey(0)
         # end for
 
-        print "\nplaca detectada, click on any image and press a key to begin char recognition . . .\n"
+        print "\nPlaca detectada, click on any image and press a key to begin char recognition . . .\n"
         cv2.waitKey(0)
     # end if # show steps #########################################################################
 
