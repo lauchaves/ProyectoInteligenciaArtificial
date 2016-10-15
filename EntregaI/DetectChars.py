@@ -160,7 +160,7 @@ def detectCharsInPlates(listOfPossiblePlates):
         # end if
 
 
-#ordena la listas de concidencias
+    #ordena la listas de concidencias
         for i in range(0, len(listOfListsOfMatchingCharsInPlate)):                              # within each list of matching chars
             listOfListsOfMatchingCharsInPlate[i].sort(key = lambda matchingChar: matchingChar.intCenterX)        # sort chars from left to right
             listOfListsOfMatchingCharsInPlate[i] = removeInnerOverlappingChars(listOfListsOfMatchingCharsInPlate[i])              # and remove inner overlapping chars
@@ -189,7 +189,7 @@ def detectCharsInPlates(listOfPossiblePlates):
         intLenOfLongestListOfChars = 0
         intIndexOfLongestListOfChars = 0
 
-        #se bsuca el que tiene mas caracteres y se devulve el indice de la lista de ese elemento
+        #se busca el que tiene mas caracteres y se devulve el indice de la lista de ese elemento
         for i in range(0, len(listOfListsOfMatchingCharsInPlate)):
             if len(listOfListsOfMatchingCharsInPlate[i]) > intLenOfLongestListOfChars:
                 intLenOfLongestListOfChars = len(listOfListsOfMatchingCharsInPlate[i])
@@ -199,7 +199,7 @@ def detectCharsInPlates(listOfPossiblePlates):
 
                 # suppose that the longest list of matching chars within the plate is the actual list of chars
                 #lista de grupos de chars mas grades
-        longestListOfMatchingCharsInPlate = listOfListsOfMatchingCharsInPlate[intIndexOfLongestListOfChars]
+        longestListOfMatchingCharsInPlate = listOfListsOfMatchingCharsInPlate[intIndexOfLongestListOfChars] // agarra longitud mas grande
 
         if Main.showSteps == True: # show steps ###################################################
             imgContours = np.zeros((height, width, 3), np.uint8)
@@ -411,9 +411,9 @@ def recognizeCharsInPlate(imgThresh, listOfMatchingChars):
     cv2.cvtColor(imgThresh, cv2.COLOR_GRAY2BGR, imgThreshColor)                     # make color version of threshold image so we can draw contours in color on it
 
     for currentChar in listOfMatchingChars:                                         # for each char in plate
-        pt1 = (currentChar.intBoundingRectX, currentChar.intBoundingRectY)
+        pt1 = (currentChar.intBoundingRectX, currentChar.intBoundingRectY) #agarra ubicacion
         pt2 = ((currentChar.intBoundingRectX + currentChar.intBoundingRectWidth), (currentChar.intBoundingRectY + currentChar.intBoundingRectHeight))
-
+#pt2 agarra ancho y largo
         cv2.rectangle(imgThreshColor, pt1, pt2, Main.SCALAR_GREEN, 2)           # draw green box around the char
 
                 # crop char out of threshold image
