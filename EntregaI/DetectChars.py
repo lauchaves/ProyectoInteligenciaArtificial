@@ -106,6 +106,7 @@ def detectCharsInPlates(listOfPossiblePlates):
                 # find all possible chars in the plate,
                 # this function first finds all contours, then only includes contours that could be chars (without comparison to other chars yet)
         listOfPossibleCharsInPlate = findPossibleCharsInPlate(possiblePlate.imgGrayscale, possiblePlate.imgThresh)
+        #lista con los posibles chars(los se considera char comparado el contorno con varias variablesglobales )
 
         if Main.showSteps == True: # show steps ###################################################
             height, width, numChannels = possiblePlate.imgPlate.shape
@@ -123,6 +124,7 @@ def detectCharsInPlates(listOfPossiblePlates):
 
                 # given a list of all possible chars, find groups of matching chars within the plate
         listOfListsOfMatchingCharsInPlate = findListOfListsOfMatchingChars(listOfPossibleCharsInPlate)
+        #restorna lista de grupos de chars que pueden ser una placa segun tamaño de chars juntos
 
         if Main.showSteps == True: # show steps ###################################################
             imgContours = np.zeros((height, width, 3), np.uint8)
@@ -139,7 +141,8 @@ def detectCharsInPlates(listOfPossiblePlates):
                 cv2.drawContours(imgContours, contours, -1, (intRandomBlue, intRandomGreen, intRandomRed))
             # end for
             cv2.imshow("7", imgContours)
-        # end if # show steps #####################################################################
+        # end if
+        #  show steps #####################################################################
 
         if (len(listOfListsOfMatchingCharsInPlate) == 0):			# if no groups of matching chars were found in the plate
 
@@ -156,6 +159,8 @@ def detectCharsInPlates(listOfPossiblePlates):
             continue						# go back to top of for loop
         # end if
 
+
+    #ordena la listas de concidencias
         for i in range(0, len(listOfListsOfMatchingCharsInPlate)):                              # within each list of matching chars
             listOfListsOfMatchingCharsInPlate[i].sort(key = lambda matchingChar: matchingChar.intCenterX)        # sort chars from left to right
             listOfListsOfMatchingCharsInPlate[i] = removeInnerOverlappingChars(listOfListsOfMatchingCharsInPlate[i])              # and remove inner overlapping chars
@@ -180,11 +185,11 @@ def detectCharsInPlates(listOfPossiblePlates):
             cv2.imshow("8", imgContours)
         # end if # show steps #####################################################################
 
-                # within each possible plate, suppose the longest list of potential matching chars is the actual list of chars
+                # entre mas larga la lista de chars tiene mayor posibilidad de que sea la lista real de la placa
         intLenOfLongestListOfChars = 0
         intIndexOfLongestListOfChars = 0
 
-                # loop through all the vectors of matching chars, get the index of the one with the most chars
+        #se busca el que tiene mas caracteres y se devulve el indice de la lista de ese elemento
         for i in range(0, len(listOfListsOfMatchingCharsInPlate)):
             if len(listOfListsOfMatchingCharsInPlate[i]) > intLenOfLongestListOfChars:
                 intLenOfLongestListOfChars = len(listOfListsOfMatchingCharsInPlate[i])
@@ -193,7 +198,8 @@ def detectCharsInPlates(listOfPossiblePlates):
         # end for
 
                 # suppose that the longest list of matching chars within the plate is the actual list of chars
-        longestListOfMatchingCharsInPlate = listOfListsOfMatchingCharsInPlate[intIndexOfLongestListOfChars]
+                #lista de grupos de chars mas grades
+        longestListOfMatchingCharsInPlate = listOfListsOfMatchingCharsInPlate[intIndexOfLongestListOfChars] // agarra longitud mas grande
 
         if Main.showSteps == True: # show steps ###################################################
             imgContours = np.zeros((height, width, 3), np.uint8)
@@ -227,6 +233,7 @@ def detectCharsInPlates(listOfPossiblePlates):
 # end function
 
 ###################################################################################################
+
 def findPossibleCharsInPlate(imgGrayscale, imgThresh):
     listOfPossibleChars = []                        # this will be the return value
     contours = []
@@ -310,7 +317,7 @@ def findListOfMatchingChars(possibleChar, listOfChars):
             continue                                # so do not add to list of matches and jump back to top of for loop
         # end if
                     # compute stuff to see if chars are a match
-        fltDistanceBetweenChars = distanceBetweenChars(possibleChar, possibleMatchingChar)
+        fltDistanceBetweenChars = distanceBetweenChars(possibleChar, possibleMatchingChar)#distancia entre chars
 
         fltAngleBetweenChars = angleBetweenChars(possibleChar, possibleMatchingChar)
 
@@ -391,7 +398,7 @@ def removeInnerOverlappingChars(listOfMatchingChars):
 # end function
 
 ###################################################################################################
-# this is where we apply the actual char recognition
+# reconocimiento de char
 def recognizeCharsInPlate(imgThresh, listOfMatchingChars):
     strChars = ""               # this will be the return value, the chars in the lic plate
 
@@ -404,9 +411,9 @@ def recognizeCharsInPlate(imgThresh, listOfMatchingChars):
     cv2.cvtColor(imgThresh, cv2.COLOR_GRAY2BGR, imgThreshColor)                     # make color version of threshold image so we can draw contours in color on it
 
     for currentChar in listOfMatchingChars:                                         # for each char in plate
-        pt1 = (currentChar.intBoundingRectX, currentChar.intBoundingRectY)
+        pt1 = (currentChar.intBoundingRectX, currentChar.intBoundingRectY) #agarra ubicacion
         pt2 = ((currentChar.intBoundingRectX + currentChar.intBoundingRectWidth), (currentChar.intBoundingRectY + currentChar.intBoundingRectHeight))
-
+#pt2 agarra ancho y largo
         cv2.rectangle(imgThreshColor, pt1, pt2, Main.SCALAR_GREEN, 2)           # draw green box around the char
 
                 # crop char out of threshold image
