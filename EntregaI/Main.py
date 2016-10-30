@@ -1,6 +1,8 @@
 #!/usr/bin/python
-#!/usr/bin/env python
+#!/usr/bin/env python # -*- coding: UTF-8 -*-
 # Main.py
+
+import cgi
 
 import cv2
 import numpy as np
@@ -34,13 +36,13 @@ def main():
         return
 
 
-    Tk().withdraw()
-    filename = askopenfilename()
-    print(filename)
+    #Tk().withdraw()
+    #filename = askopenfilename()
+    #print(filename)
 
 
 
-    res = cv2.imread(filename)  # open image
+    res = cv2.imread("c8.jpg")  # open image
 
     imgOriginalScene = np.mat
 
